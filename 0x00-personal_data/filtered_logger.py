@@ -1,22 +1,33 @@
 #!/usr/bin/env python3
 """
-Module for filtering datum
+Module for logging user data
 """
 import re
+import csv
 import logging
-from typing import List
+from typing import List, Tuple
 
 
-def filter_datum(
-    fields: List[str], redaction: str, message: str, separator: str
-) -> str:
+PII_FIELDS: Tuple[str, str, str, str, str] = (
+    "name", "email", "phone", "ssn", "ip"
+)
+
+
+def get_logger() -> logging.Logger:
     """
-    Returns the log message obfuscated
+    Returns a logger object with StreamHandler and RedactingFormatter.
     """
-    for field in fields:
-        message = re.sub(f"{field}=.+?{separator}",
-                         f"{field}={redaction}{separator}", message)
-    return message
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    formatter = RedactingFormatter(fields=PII_FIELDS)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+
+    return logger
 
 
 class RedactingFormatter(logging.Formatter):
@@ -39,3 +50,27 @@ class RedactingFormatter(logging.Formatter):
         return filter_datum(
             self.fields, self.REDACTION, message, self.SEPARATOR
         )
+
+
+def filter_datum(
+    fields: List[str], redaction: str, message: str, separator: str
+) -> str:
+    """
+    Returns the log message obfuscated
+    """
+    for field in fields:
+        message = re.sub(f"{field}=.+?{separator}",
+                         f"{field}={redaction}{separator}", message)
+    return message
+
+
+if __name__ == "__main__":
+    logger = get_logger()
+
+    with open("user_data.csv", "r") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            log_message = ""
+            for field in row.keys():
+                log_message += f"{field}={row[field]};"
+            logger.info(log_message[:-1])
