@@ -83,6 +83,33 @@ def filter_datum(
     return message
 
 
+def main() -> None:
+    """
+    Obtain a database connection using get_db and retrieve all rows
+    in the users table and display each row under a filtered format.
+    """
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    formatter = RedactingFormatter(fields=PII_FIELDS)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    for row in cursor:
+        log_message = ""
+        for i in range(len(row)):
+            log_message += f"{cursor.description[i][0]}={row[i]};"
+        logger.info(log_message[:-1])
+    cursor.close()
+    db.close()
+
+
 if __name__ == "__main__":
     logger = get_logger()
 
@@ -93,3 +120,4 @@ if __name__ == "__main__":
             for field in row.keys():
                 log_message += f"{field}={row[field]};"
             logger.info(log_message[:-1])
+    main()
