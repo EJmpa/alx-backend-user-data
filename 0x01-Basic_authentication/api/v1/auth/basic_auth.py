@@ -37,7 +37,6 @@ class BasicAuth(Auth):
 
         return base64_part if base64_part else None
 
-
     def decode_base64_authorization_header(
             self, base64_authorization_header: str) -> str:
         """
