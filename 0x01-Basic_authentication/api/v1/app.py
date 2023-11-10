@@ -21,6 +21,18 @@ def not_found(error) -> str:
     return jsonify({"error": "Not found"}), 404
 
 
+def unauthorized(error: Exception) -> tuple:
+    """Return a JSON response for a 401 error.
+
+    Args:
+        error: The error that occurred.
+
+    Returns:
+        A tuple containing the JSON response and the HTTP status code.
+    """
+    return jsonify({'error': 'Unauthorized'}), 401
+
+
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
