@@ -32,11 +32,11 @@ class Auth:
             path += '/'
 
         for ep in excluded_paths:
-        if ep[-1] == '*':
-            if path.startswith(ep[:-1]):
+            if ep[-1] == '*':
+                if path.startswith(ep[:-1]):
+                    return False
+            elif path == ep:
                 return False
-        elif path == ep:
-            return False
 
         return True
 
