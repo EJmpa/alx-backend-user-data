@@ -22,7 +22,7 @@ def not_found(error) -> str:
 
 
 @app.errorhandler(401)
-def unauthorized(error: Exception) -> tuple:
+def request_unauthorized(error) -> tuple:
     """Return a JSON response for a 401 error.
 
     Args:
