@@ -36,7 +36,7 @@ def request_unauthorized(error) -> tuple:
 
 
 @app.errorhandler(403)
-def forbidden(error: HTTPException) -> tuple:
+def request_forbidden(error: HTTPException) -> tuple:
     """Handle 403 errors by returning a JSON response.
 
     Args:
