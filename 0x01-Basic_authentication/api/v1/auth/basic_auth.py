@@ -57,5 +57,5 @@ class BasicAuth(Auth):
             message_bytes = base64.b64decode(base64_bytes)
             message = message_bytes.decode('utf-8')
             return message
-        except base64.binascii.Error:
+        except (base64.binascii.Error, UnicodeDecodeError):
             return None
