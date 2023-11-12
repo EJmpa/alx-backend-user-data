@@ -3,6 +3,7 @@
 Module for SessionAuth
 """
 import uuid
+from typing import Optional
 from api.v1.auth.auth import Auth
 
 
