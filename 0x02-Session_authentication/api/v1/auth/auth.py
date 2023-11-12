@@ -3,6 +3,7 @@
 Module containing Auth class for authentication.
 """
 
+import os
 from typing import List, TypeVar
 from flask import request
 
@@ -80,7 +81,7 @@ class Auth:
             return None
 
         # Use environment variable SESSION_NAME to define the name of d cookie
-        cookie_name = os.getenv("SESSION_NAME")
+        cookie_name = os.getenv("SESSION_NAME", "_my_session_id")
 
         # Use .get() to access the cookie in the request cookies dictionary
         return request.cookies.get(cookie_name)
