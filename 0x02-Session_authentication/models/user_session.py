@@ -5,6 +5,7 @@ UserSession model module
 from sqlalchemy import Column, String, ForeignKey
 from models.base import Base
 
+
 class UserSession(Base):
     """
     UserSession class
